@@ -5,7 +5,7 @@ Do you this NBT-Editor? Feel free to donate!<br />
 
 ## The License
 Copyright (c) 2011-2013, Keyle<br />
-MyPet is licensed under the [GNU Lesser General Public License Version 3][License].
+Keyle-NBT-Editor is licensed under the [GNU Lesser General Public License Version 3][License].
 
 Some icons in [resources/icons] are owned by the Oxygen Team (http://www.oxygen-icons.org).<br />
 These icons are under the terms of the [GNU Lesser General Public License Version][License].

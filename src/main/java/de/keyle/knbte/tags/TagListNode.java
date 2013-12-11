@@ -75,9 +75,10 @@ public class TagListNode extends TagBaseNode {
                     continue;
             }
             this.add(data.get(data.size() - 1));
-            data.get(data.size() - 1).getUserObject();
+            data.get(data.size() - 1).updateUserObject();
         }
         updateUserObject();
+        sortNodes();
     }
 
     public void updateUserObject() {

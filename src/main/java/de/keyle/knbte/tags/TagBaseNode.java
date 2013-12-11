@@ -24,8 +24,10 @@ import de.keyle.knbt.TagBase;
 import de.keyle.knbt.TagType;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.MutableTreeNode;
+import java.util.Collections;
 
-public abstract class TagBaseNode extends DefaultMutableTreeNode {
+public abstract class TagBaseNode extends DefaultMutableTreeNode implements Comparable<TagBaseNode> {
     protected TagBase tag;
 
     public TagBaseNode(TagBase tagBase) {
@@ -62,5 +64,20 @@ public abstract class TagBaseNode extends DefaultMutableTreeNode {
     public Object getUserObject() {
         updateUserObject();
         return userObject;
+    }
+
+    public void add(MutableTreeNode newChild) {
+        super.add(newChild);
+        sortNodes();
+    }
+
+    public int compareTo(TagBaseNode o2) {
+        return this.toString().compareTo(o2.toString());
+    }
+
+    public void sortNodes() {
+        if (this.children != null) {
+            Collections.sort(this.children);
+        }
     }
 }

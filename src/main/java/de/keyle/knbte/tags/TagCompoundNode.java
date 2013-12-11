@@ -79,6 +79,7 @@ public class TagCompoundNode extends TagBaseNode {
             key2Node.get(key).getUserObject();
         }
         updateUserObject();
+        sortNodes();
     }
 
     public TagBaseNode getNodeByKey(String key) {

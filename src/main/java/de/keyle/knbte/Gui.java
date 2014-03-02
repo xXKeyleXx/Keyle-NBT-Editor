@@ -37,6 +37,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 
 public class Gui {
@@ -62,7 +63,7 @@ public class Gui {
 
     JPopupMenu listAddButtonMenu;
 
-    File openedFile = null;
+    public File openedFile = null;
 
     final JFileChooser fc = new JFileChooser();
 
@@ -84,7 +85,10 @@ public class Gui {
     final ImageIcon SAVE_AS_ICON = new ImageIcon(ClassLoader.getSystemResource("icons/save_as.png"));
     final ImageIcon EXIT_ICON = new ImageIcon(ClassLoader.getSystemResource("icons/close.png"));
 
-    public Gui(JFrame skilltreeCreatorFrame) {
+    public Gui(JFrame skilltreeCreatorFrame, File argFile) {
+        if (argFile != null) {
+            openFile(argFile);
+        }
 
         JMenuBar menuBar = new JMenuBar();
 
@@ -180,16 +184,7 @@ public class Gui {
                     File file = fc.getSelectedFile();
                     System.out.println("Opening: " + file.getName());
 
-                    TagCompound root;
-                    try {
-                        root = TagStream.readTag(new FileInputStream(file), true);
-                    } catch (IOException e) {
-                        return;
-                    }
-
-                    tagTree.setModel(new DefaultTreeModel(new TagCompoundNode(root)));
-                    tagTree.updateUI();
-                    openedFile = file;
+                    openFile(file);
                 }
             }
         };
@@ -574,6 +569,14 @@ public class Gui {
     }
 
     public static void main(String[] args) {
+        System.out.println("Arguments: " + Arrays.toString(args));
+        File argFile = null;
+        if (args.length > 0) {
+            argFile = new File(args[0]);
+            if (!argFile.exists() || !argFile.isFile()) {
+                argFile = null;
+            }
+        }
 
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -582,7 +585,7 @@ public class Gui {
 
 
         final JFrame editorFrame = new JFrame("Keyle - NBT-Editor");
-        Gui gui = new Gui(editorFrame);
+        Gui gui = new Gui(editorFrame, argFile);
         editorFrame.setContentPane(gui.mainPanel);
         editorFrame.pack();
         editorFrame.setVisible(true);
@@ -626,7 +629,21 @@ public class Gui {
         }
         */
 
-        tagTree = new JTree(new DefaultTreeModel(new TagCompoundNode(new TagCompound())));
+
+        TagCompound root;
+        if (openedFile != null && openedFile.exists()) {
+            System.out.println("Opening: " + openedFile.getName());
+
+            try {
+                root = TagStream.readTag(new FileInputStream(openedFile), true);
+            } catch (IOException e) {
+                return;
+            }
+        } else {
+            root = new TagCompound();
+        }
+
+        tagTree = new JTree(new DefaultTreeModel(new TagCompoundNode(root)));
         tagTree.setLargeModel(true);
         DefaultTreeCellRenderer renderer = new DefaultTreeCellRenderer() {
             public Component getTreeCellRendererComponent(JTree tree, Object value, boolean sel, boolean expanded, boolean leaf, int row, boolean hasFocus) {
@@ -704,5 +721,18 @@ public class Gui {
             return (TagBaseNode) path.getLastPathComponent();
         }
         return null;
+    }
+
+    public void openFile(File file) {
+        TagCompound root;
+        try {
+            root = TagStream.readTag(new FileInputStream(file), true);
+        } catch (IOException e) {
+            return;
+        }
+
+        tagTree.setModel(new DefaultTreeModel(new TagCompoundNode(root)));
+        tagTree.updateUI();
+        openedFile = file;
     }
 }

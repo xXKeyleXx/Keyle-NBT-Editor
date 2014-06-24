@@ -728,11 +728,13 @@ public class Gui {
         try {
             root = TagStream.readTag(new FileInputStream(file), true);
         } catch (IOException e) {
+            e.printStackTrace();
             return;
         }
 
         tagTree.setModel(new DefaultTreeModel(new TagCompoundNode(root)));
         tagTree.updateUI();
         openedFile = file;
+        System.out.println("opened " + file.getName());
     }
 }

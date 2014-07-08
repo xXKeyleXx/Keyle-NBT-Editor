@@ -724,12 +724,19 @@ public class Gui {
     }
 
     public void openFile(File file) {
-        TagCompound root;
+        TagCompound root = null;
         try {
             root = TagStream.readTag(new FileInputStream(file), true);
         } catch (IOException e) {
             e.printStackTrace();
-            return;
+        }
+        if (root == null) {
+            try {
+                root = TagStream.readTag(new FileInputStream(file), false);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return;
+            }
         }
 
         tagTree.setModel(new DefaultTreeModel(new TagCompoundNode(root)));
